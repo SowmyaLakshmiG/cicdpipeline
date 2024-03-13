@@ -29,23 +29,35 @@ pipeline {
         }
       }
     }
-    stage('Build and Push Docker Image') {
-      environment {
-        DOCKER_IMAGE = "push.inhi1u-rhelvm1:30443/ultimate-cicd:${BUILD_NUMBER}"
-        // DOCKERFILE_LOCATION = "java-maven-sonar-argocd-helm-k8s/spring-boot-app/Dockerfile"
-        REGISTRY_CREDENTIALS = credentials('nexus')
-      }
-      steps {
-        script {
-            sh 'cd java-maven-sonar-argocd-helm-k8s/spring-boot-app && docker build -t ${DOCKER_IMAGE} .'
-            def dockerImage = docker.image("${DOCKER_IMAGE}")
-            
-            docker.withRegistry('https://push.inhi1u-rhelvm1:30443', 'nexus') {
-                dockerImage.push()
+stage('Docker Build') {
+        
+            steps { 
+                    echo 'Building docker Image'
+                    sh 'docker build -t push.inhi1u-rhelvm1:30443/ultimate-cicd:${BUILD_NUMBER} .'
+                }
+        }
+stage('Docker Login') {
+  environment{
+        NEXUS_DOCKER_REPO = 'https://push.inhi1u-rhelvm1:30443'
+        NEXUS_CREDS = credentials('nexus')
+    }
+            steps {
+                echo 'Nexus Docker Repository Login'
+                script{
+                    withCredentials([usernamePassword(credentialsId: 'nexus', usernameVariable: 'USER', passwordVariable: 'PASS' )]){
+                       sh ' echo $PASS | sudo docker login -u $USER --password-stdin $NEXUS_DOCKER_REPO'
+                    }
+                   
+                }
             }
         }
-      }
-    }
+
+    stage('Docker Push') {
+            steps {
+                echo 'Pushing Image to docker hub'
+                sh 'docker build -t push.inhi1u-rhelvm1:30443/ultimate-cicd:${BUILD_NUMBER}'
+            }
+        }
     stage('Update Deployment File') {
         environment {
             GIT_REPO_NAME = "cicdpipeline"
