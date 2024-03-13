@@ -40,7 +40,7 @@ pipeline {
             sh 'cd java-maven-sonar-argocd-helm-k8s/spring-boot-app && docker build -t ${DOCKER_IMAGE} .'
             def dockerImage = docker.image("${DOCKER_IMAGE}")
             sh '----echo passed---'
-            docker.withRegistry('https://nexus.push.inhi1u-rhelvm1:30443', "nexus") {
+            docker.withRegistry('https://nexus.inhi1u-rhelvm1:30443', 'nexus') {
                 dockerImage.push()
             }
         }
