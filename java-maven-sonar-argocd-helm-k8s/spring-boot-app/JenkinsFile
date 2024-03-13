@@ -55,7 +55,7 @@ stage('Docker Login') {
     stage('Docker Push') {
             steps {
                 echo 'Pushing Image to docker hub'
-                sh 'docker build -t push.inhi1u-rhelvm1:30443/ultimate-cicd:${BUILD_NUMBER}'
+                sh 'docker push push.inhi1u-rhelvm1:30443/ultimate-cicd:${BUILD_NUMBER}'
             }
         }
     stage('Update Deployment File') {
