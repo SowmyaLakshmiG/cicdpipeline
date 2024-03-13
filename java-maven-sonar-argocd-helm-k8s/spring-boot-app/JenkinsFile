@@ -33,7 +33,7 @@ stage('Docker Build') {
         
             steps { 
                     echo 'Building docker Image'
-                    sh 'docker build -t push.inhi1u-rhelvm1:30443/ultimate-cicd:${BUILD_NUMBER} .'
+                    sh ' cd java-maven-sonar-argocd-helm-k8s/spring-boot-app && docker build -t push.inhi1u-rhelvm1:30443/ultimate-cicd:${BUILD_NUMBER} .'
                 }
         }
 stage('Docker Login') {
