@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
       - name: spring-boot-app
-        image: push.inhi1u-rhelvm1:30443/ultimate-cicd:56
+        image: push.inhi1u-rhelvm1:30443/ultimate-cicd:73
         ports:
         - containerPort: 8080
